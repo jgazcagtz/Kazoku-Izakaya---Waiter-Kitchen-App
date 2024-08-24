@@ -1,0 +1,832 @@
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kazoku Izakaya - Waiter & Kitchen App</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #d4af37;
+            --accent-color: #ffc0cb;
+            --background-color: #ffffff;
+            --text-color: #333;
+            --white: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 10px;
+            background-color: var(--white);
+            color: var(--primary-color);
+            border-bottom: 4px solid var(--white);
+        }
+
+        header img {
+            width: 120px;
+            height: 120px;
+            object-fit: scale-down;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--secondary-color);
+        }
+
+        h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-top: 10px;
+            color: var(--secondary-color);
+        }
+
+        p {
+            font-size: 1em;
+            margin-top: 5px;
+            font-weight: 700;
+        }
+
+        .intro-section {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .menu-title-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 10px 15px;
+            border-radius: 50px;
+            margin: 20px auto;
+            width: fit-content;
+            position: relative;
+        }
+
+        .horizontal-product-grid,
+        .vertical-product-grid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            overflow-x: auto;
+        }
+
+        .vertical-product-grid {
+            flex-direction: column;
+        }
+
+        .horizontal-product-item,
+        .vertical-product-item {
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: var(--white);
+            box-shadow: 0 4px 8px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-width: 280px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .horizontal-product-item img,
+        .vertical-product-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .horizontal-product-item h3,
+        .vertical-product-item h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        .horizontal-product-item p,
+        .vertical-product-item p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        .choose-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .choose-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            background-color: var(--white);
+            color: var(--primary-color);
+            font-size: 0.9em;
+        }
+
+        #cart {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: 100%;
+            max-width: 400px;
+            display: none;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #cart h3 {
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        #cart-items p {
+            margin-bottom: 15px;
+        }
+
+        #cart-total {
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            color: var(--text-color);
+        }
+
+        #order-notes {
+            width: 100%;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            border-top: 4px solid var(--primary-color);
+            box-shadow: 0 -4px 8px var(--shadow-color);
+            font-size: 0.9em;
+        }
+
+        #whatsapp-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #whatsapp-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        #refresh-btn {
+            padding: 10px 20px;
+            background-color: #333;
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #refresh-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        #edit-cart-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #edit-cart-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        #save-order-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: center;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: 700;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        #save-order-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        #cart-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: var (--white);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            z-index: 1001;
+        }
+
+        #cart-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        #close-cart-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #close-cart-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .quantity-btn {
+            background-color: #333;
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 5px;
+        }
+
+        .quantity-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        #create-order-btn {
+            padding: 10px 20px;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: 700;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        #create-order-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            header img {
+                width: 100px;
+                height: 100px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            p {
+                font-size: 0.9em;
+            }
+
+            .choose-btn {
+                font-size: 0.8em;
+            }
+
+            #cart-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header img {
+                width: 80px;
+                height: 80px;
+            }
+
+            h1 {
+                font-size: 1.2em;
+            }
+
+            p {
+                font-size: 0.8em;
+            }
+
+            .horizontal-product-item img,
+            .vertical-product-item img {
+                width: 60px;
+                height: 60px;
+            }
+
+            .horizontal-product-item h3,
+            .vertical-product-item h3 {
+                font-size: 1em;
+            }
+
+            #cart {
+                bottom: 5px;
+                right: 5px;
+                width: 90%;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="https://i.imgur.com/m6xHJP8.png" alt="Logo">
+        <h1>Kazoku Izakaya</h1>
+        <h2>COMANDA</h2>
+    </header>
+    <main>
+        <div class="intro-section">
+            <p>1) Selecciona el botón "Crear Orden" en la parte inferior de esta página. </p> <p>2) Selecciona los productos del menú y añádelos al carrito.</p>
+            <p>3) Cuando termines, revisa el pedido y envíalo a  cocina por WhatsApp.</p>
+            <p>  Puedes editar la orden con el botón "Revisar Detalles" así como agregar Notas en el carrito. </p>
+            <p>Si lo requieres, pide ayuda a tu supervisor para utilizar esta herramienta.</p>
+        </div>
+
+        <div id="cart">
+            <h3>🛒 Carrito</h3>
+            <div id="cart-items"></div>
+            <p id="cart-total">Total: $0.00</p>
+            <p>Número de Mesa:</p>
+            <input type="text" id="table-number" placeholder="Enter Table Number">
+            <p>Empleado:</p>
+            <input type="text" id="employee-name" placeholder="Enter Employee Name">
+            <p>Notas:</p>
+            <textarea id="order-notes" placeholder="Agrega notas adicionales..." oninput="updateWhatsAppLink()"></textarea>
+
+            <p>Forma de Pago:</p>
+            <label><input type="radio" name="payment-method" value="En línea" onchange="updateWhatsAppLink()"> En línea</label>
+            <label><input type="radio" name="payment-method" value="Efectivo" onchange="updateWhatsAppLink()"> Efectivo</label>
+            <label><input type="radio" name="payment-method" value="Transferencia" onchange="updateWhatsAppLink()"> Transferencia</label>
+
+            <p><a id="whatsapp-btn" href="#" target="_blank" onclick="sendOrder()">Enviar orden a cocina</a></p>
+            <button id="save-order-btn" onclick="saveOrder()">Guardar Orden</button>
+            <button id="edit-cart-btn" onclick="toggleModal()">Revisar Detalles</button>
+            <button id="refresh-btn" onclick="clearCart()">Limpiar Orden</button>
+            <button id="close-cart-btn" onclick="toggleCart()">Cerrar Carrito</button>
+        </div>
+        <button id="cart-btn" onclick="toggleCart()">🛒</button>
+
+        <div class="menu-title-container">
+            <h2>⭐ Favoritos</h2>
+        </div>
+        <div id="menu-horizontal" class="horizontal-product-grid"></div>
+
+        <div class="menu-title-container">
+            <h2>🍲 Sopas</h2>
+        </div>
+        <div id="menu-vertical-sopas" class="vertical-product-grid"></div>
+
+        <div class="menu-title-container">
+            <h2>🍱 Platos Principales</h2>
+        </div>
+        <div id="menu-vertical-principales" class="vertical-product-grid"></div>
+
+        <div class="menu-title-container">
+            <h2>🍶 Especialidades</h2>
+        </div>
+        <div id="menu-vertical-especialidades" class="vertical-product-grid"></div>
+
+        <div class="menu-title-container">
+            <h2>🍨 Postres</h2>
+        </div>
+        <div id="menu-vertical-postres" class="vertical-product-grid"></div>
+
+        <button id="create-order-btn" onclick="createOrder()">Crear Orden</button>
+    </main>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Detalles de la Orden</h2>
+                <span class="close" onclick="toggleModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="edit-cart-items"></div>
+            <div class="modal-footer">
+                <button class="choose-btn" onclick="toggleModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="toggleProductModal()">&times;</span>
+            <div id="product-modal-content"></div>
+            <button class="choose-btn" onclick="addProductToCart()">Añadir al Carrito</button>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let total = 0;
+        let totalItems = 0;
+        let selectedProduct = null;
+        let orderNumber = '';
+
+        function createOrder() {
+            orderNumber = `ORD-${Date.now()}`;
+            alert(`Orden creada: ${orderNumber}`);
+            updateWhatsAppLink();
+        }
+
+        function saveOrder() {
+            const tableNumber = document.getElementById('table-number').value || 'Sin número de mesa';
+            const employeeName = document.getElementById('employee-name').value || 'Sin empleado';
+            const orderNotes = document.getElementById('order-notes').value || 'Sin notas adicionales';
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'Sin especificar';
+            const orderItems = cart.map(item => `${item.name} (${item.quantity})`).join(', ');
+            const orderTotal = total.toFixed(2);
+
+            const orderData = {
+                orderNumber,
+                tableNumber,
+                employeeName,
+                orderItems,
+                orderTotal,
+                orderNotes,
+                paymentMethod,
+                timestamp: new Date().toLocaleString()
+            };
+
+            downloadOrderSummary(orderData);
+            alert('Orden guardada con éxito!');
+        }
+
+        function downloadOrderSummary(orderData) {
+            const orderSummary = `
+                Número de Orden: ${orderData.orderNumber}
+                Mesa: ${orderData.tableNumber}
+                Empleado: ${orderData.employeeName}
+                Artículos: ${orderData.orderItems}
+                Total: $${orderData.orderTotal}
+                Forma de Pago: ${orderData.paymentMethod}
+                Notas: ${orderData.orderNotes}
+                Timestamp: ${orderData.timestamp}
+            `;
+
+            const blob = new Blob([orderSummary], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            link.download = `${orderData.orderNumber}.txt`;
+            link.click();
+        }
+
+        window.createProductElement = function (product, layout = 'horizontal') {
+            const productItem = document.createElement('div');
+            productItem.classList.add(layout === 'horizontal' ? 'horizontal-product-item' : 'vertical-product-item');
+            productItem.innerHTML = `
+                <img src="${product.img}" alt="${product.name}">
+                <div>
+                    <h3>${product.name}</h3>
+                    <p>$${product.price.toFixed(2)}</p>
+                    <p>${product.includes}</p>
+                    <select id="quantity-${product.id}-${layout}" onchange="updateSelectedProductQuantity(${product.id}, '${layout}')">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                    <p><button class="choose-btn" onclick="showProductModal(${product.id}, '${layout}')">Elegir</button></p>
+                </div>
+            `;
+            return productItem;
+        }
+
+        window.displayProducts = function (productsToDisplay, layout = 'horizontal', containerId) {
+            const menu = document.getElementById(containerId);
+            menu.innerHTML = '';
+            productsToDisplay.forEach(product => {
+                menu.appendChild(createProductElement(product, layout));
+            });
+        }
+
+        window.updateSelectedProductQuantity = function (productId, layout) {
+            const quantitySelect = document.getElementById(`quantity-${productId}-${layout}`);
+            selectedProduct = { ...products.find(p => p.id === productId), quantity: parseInt(quantitySelect.value) };
+        }
+
+        window.showProductModal = function (productId, layout) {
+            updateSelectedProductQuantity(productId, layout); // Ensure selected quantity is updated
+
+            const modalContent = document.getElementById('product-modal-content');
+            modalContent.innerHTML = `
+                <h3>${selectedProduct.name}</h3>
+                <img src="${selectedProduct.img}" alt="${selectedProduct.name}" style="width: 100px; height: 100px;">
+                <p>Precio: $${selectedProduct.price.toFixed(2)}</p>
+                <p>${selectedProduct.includes}</p>
+                <p>Cantidad: ${selectedProduct.quantity}</p>
+            `;
+
+            toggleProductModal();
+        };
+
+        window.addProductToCart = function () {
+            const existingProduct = cart.find(item => item.id === selectedProduct.id);
+
+            if (existingProduct) {
+                existingProduct.quantity += selectedProduct.quantity;
+            } else {
+                cart.push({ ...selectedProduct });
+            }
+
+            updateCart();
+            toggleProductModal();
+        };
+
+        window.updateCart = function () {
+            const cartItemsSection = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            const editCartItems = document.getElementById('edit-cart-items');
+
+            cartItemsSection.innerHTML = '';
+            editCartItems.innerHTML = '';
+            total = 0;
+            totalItems = 0;
+
+            cart.forEach((item, index) => {
+                cartItemsSection.innerHTML += `<p>${item.name} - $${item.price.toFixed(2)} x ${item.quantity} = $${(item.price * item.quantity).toFixed(2)}</p>`;
+                editCartItems.innerHTML += `
+                    <p>
+                        ${item.name} - 
+                        <button class="quantity-btn" onclick="decreaseQuantity(${index})">-</button>
+                        ${item.quantity}
+                        <button class="quantity-btn" onclick="increaseQuantity(${index})">+</button>
+                        = $${(item.price * item.quantity).toFixed(2)}
+                        <button onclick="removeCartItem(${index})">Eliminar</button>
+                    </p>`;
+                total += item.price * item.quantity;
+                totalItems += item.quantity;
+            });
+
+            cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+            updateWhatsAppLink();
+        }
+
+        window.increaseQuantity = function (index) {
+            cart[index].quantity += 1;
+            updateCart();
+        };
+
+        window.decreaseQuantity = function (index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity -= 1;
+            } else {
+                removeCartItem(index);
+            }
+            updateCart();
+        };
+
+        window.removeCartItem = function (index) {
+            cart.splice(index, 1);
+            updateCart();
+        };
+
+        window.updateWhatsAppLink = function () {
+            const whatsappBtn = document.getElementById('whatsapp-btn');
+            const tableNumber = document.getElementById('table-number').value || 'Sin número de mesa';
+            const employeeName = document.getElementById('employee-name').value || 'Sin empleado';
+            const orderNotes = document.getElementById('order-notes').value || 'Sin notas adicionales';
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'Sin especificar';
+            const message = `Orden para cocina:\nOrden: ${orderNumber}\nMesa: ${tableNumber}\nEmpleado: ${employeeName}\n${cart.map(item => `${item.name} (${item.quantity})`).join('\n')}\n\nTotal de Productos: ${totalItems}\nForma de Pago: ${paymentMethod}\nNotas: ${orderNotes}`;
+            const encodedMessage = encodeURIComponent(message);
+            whatsappBtn.href = `https://wa.me/525533355687?text=${encodedMessage}`;
+            whatsappBtn.style.display = totalItems > 0 ? 'inline-block' : 'none';
+        }
+
+        window.clearCart = function () {
+            cart.length = 0;
+            updateCart();
+        };
+
+        window.toggleCart = function () {
+            const cart = document.getElementById('cart');
+            cart.style.display = cart.style.display === 'none' || cart.style.display === '' ? 'block' : 'none';
+        };
+
+        window.toggleModal = function () {
+            const modal = document.getElementById('edit-modal');
+            modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'block' : 'none';
+        };
+
+        window.toggleProductModal = function () {
+            const modal = document.getElementById('product-modal');
+            modal.style.display = modal.style.display === 'none' || modal.style.display === '' ? 'block' : 'none';
+        };
+
+        window.onclick = function (event) {
+            const modals = [document.getElementById('edit-modal'), document.getElementById('product-modal')];
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+
+        function sendOrder() {
+            // Trigger WhatsApp message without refreshing the page or showing alerts
+            window.open(document.getElementById('whatsapp-btn').href, '_blank');
+        }
+
+        const products = [
+            { id: 1, name: "Edamame Trufado", price: 150, includes: "Edamame al vapor con sal marina y aceite de trufa negra.", category: "Entradas", img: "https://i.imgur.com/DSOwAfw.png" },
+            { id: 2, name: "Tartar de Atún Bluefin", price: 350, includes: "Atún Bluefin finamente picado con aguacate, tobiko y aderezo de ponzu y yuzu.", category: "Entradas", img: "https://i.imgur.com/Jhf3oO6.png" },
+            { id: 3, name: "Tempura de Langosta", price: 450, includes: "Langosta fresca frita en una ligera tempura con salsa de soya dulce.", category: "Entradas", img: "https://i.imgur.com/eusN3Bt.png" },
+            { id: 4, name: "Tataki de Wagyu", price: 500, includes: "Finas láminas de wagyu sellado, acompañadas de salsa ponzu y jengibre fresco.", category: "Entradas", img: "https://i.imgur.com/wc2orxe.png" },
+            { id: 5, name: "Sashimi de Hamachi", price: 400, includes: "Láminas de hamachi fresco servidas con rodajas de jalapeño, cilantro y ponzu.", category: "Entradas", img: "https://i.imgur.com/aF9yIXx.png" },
+            { id: 6, name: "Sopa Miso con Trufa Blanca", price: 200, includes: "Clásica sopa miso con un toque de trufa blanca y setas shiitake.", category: "Sopas", img: "https://i.imgur.com/LBrhsUp.png" },
+            { id: 7, name: "Ramen de Pato", price: 350, includes: "Caldo de pato confitado, fideos ramen caseros, huevo pochado y nori.", category: "Sopas", img: "https://i.imgur.com/fYGAy63.png" },
+            { id: 8, name: "Dobin Mushi", price: 300, includes: "Sopa al vapor con mariscos frescos, servida en una tetera de cerámica.", category: "Sopas", img: "https://i.imgur.com/KDJ4vmf.png" },
+            { id: 9, name: "Sopa de Almejas en Dashi", price: 280, includes: "Almejas frescas cocidas en un caldo de dashi y sake, con cebolleta y jengibre.", category: "Sopas", img: "https://i.imgur.com/cJRM3XV.png" },
+            { id: 10, name: "Sopa de Erizo de Mar", price: 380, includes: "Crema de erizo de mar con un toque de yuzu y alga nori.", category: "Sopas", img: "https://i.imgur.com/dYG06Vn.png" },
+            { id: 11, name: "Sukiyaki de Wagyu A5", price: 1200, includes: "Lonjas de wagyu A5 cocidas en mesa en una olla de hierro, con vegetales frescos y tofu.", category: "Platos Principales", img: "https://i.imgur.com/hTljGud.png" },
+            { id: 12, name: "Nigiri Omakase", price: 850, includes: "Selección de 10 piezas de nigiri de temporada, elegidas por el chef.", category: "Platos Principales", img: "https://i.imgur.com/DSOwAfw.png" },
+            { id: 13, name: "Chirashi Don", price: 700, includes: "Arroz de sushi cubierto con una selección premium de mariscos frescos.", category: "Platos Principales", img: "https://i.imgur.com/Jhf3oO6.png" },
+            { id: 14, name: "Katsuo Tataki con Salsa Ponzu", price: 600, includes: "Bonito ligeramente asado, servido con salsa ponzu y ensalada de daikon.", category: "Platos Principales", img: "https://i.imgur.com/eusN3Bt.png" },
+            { id: 15, name: "Unagi Kabayaki", price: 550, includes: "Anguila asada con salsa dulce de soya, servida con arroz al vapor.", category: "Platos Principales", img: "https://i.imgur.com/wc2orxe.png" },
+            { id: 16, name: "Robata de Mariscos", price: 750, includes: "Selección de mariscos frescos a la parrilla, servidos con salsa de miso y limón.", category: "Platos Principales", img: "https://i.imgur.com/aF9yIXx.png" },
+            { id: 17, name: "Salmón Teriyaki con Yuzu", price: 650, includes: "Filete de salmón a la parrilla con una salsa teriyaki de yuzu, acompañado de espárragos.", category: "Platos Principales", img: "https://i.imgur.com/LBrhsUp.png" },
+            { id: 18, name: "Pollo Karaage con Salsa de Sésamo", price: 450, includes: "Muslos de pollo crujientes, marinados y fritos, servidos con una salsa de sésamo y jengibre.", category: "Platos Principales", img: "https://i.imgur.com/fYGAy63.png" },
+            { id: 19, name: "Tonkatsu de Iberico", price: 550, includes: "Chuleta de cerdo ibérico empanizada, servida con repollo y salsa tonkatsu casera.", category: "Platos Principales", img: "https://i.imgur.com/KDJ4vmf.png" },
+            { id: 20, name: "Shabu-Shabu de Mariscos", price: 900, includes: "Caldo de kombu y sake para cocinar mariscos frescos en la mesa.", category: "Platos Principales", img: "https://i.imgur.com/cJRM3XV.png" },
+            { id: 21, name: "Fugu Sashimi", price: 1500, includes: "Sashimi de pez globo preparado por un chef con licencia, acompañado de salsa ponzu.", category: "Especialidades", img: "https://i.imgur.com/dYG06Vn.png" },
+            { id: 22, name: "Tempura de Erizo de Mar", price: 800, includes: "Erizo de mar fresco envuelto en alga y frito en tempura, servido con salsa tentsuyu.", category: "Especialidades", img: "https://i.imgur.com/hTljGud.png" },
+            { id: 23, name: "Takoyaki de Pulpo de Profundidad", price: 450, includes: "Bolas de masa frita rellenas de pulpo capturado en aguas profundas, con salsa de okonomiyaki.", category: "Especialidades", img: "https://i.imgur.com/DSOwAfw.png" },
+            { id: 24, name: "Omakase Chef's Table", price: 2500, includes: "Experiencia de degustación de 12 tiempos, personalizada por el chef.", category: "Especialidades", img: "https://i.imgur.com/Jhf3oO6.png" },
+            { id: 25, name: "Matsusaka Beef Teppanyaki", price: 1800, includes: "Filete de Matsusaka cocinado al estilo teppanyaki, acompañado de vegetales de temporada.", category: "Especialidades", img: "https://i.imgur.com/eusN3Bt.png" },
+            { id: 26, name: "Sushi Incrustado con Oro", price: 1000, includes: "Nigiri de atún bluefin cubierto con una hoja de oro comestible y caviar.", category: "Especialidades", img: "https://i.imgur.com/wc2orxe.png" },
+            { id: 27, name: "King Crab Gratinado con Miso", price: 1200, includes: "Cangrejo real gratinado con una mezcla de miso blanco y queso gruyere.", category: "Especialidades", img: "https://i.imgur.com/aF9yIXx.png" },
+            { id: 28, name: "Toro Tartare con Caviar Oscietra", price: 1300, includes: "Tartar de ventresca de atún acompañado de caviar Oscietra y hojas de shiso.", category: "Especialidades", img: "https://i.imgur.com/LBrhsUp.png" },
+            { id: 29, name: "Ikura Don", price: 850, includes: "Bol de arroz con huevas de salmón frescas, servidas con salsa de soya y wasabi.", category: "Especialidades", img: "https://i.imgur.com/fYGAy63.png" },
+            { id: 30, name: "Yakiniku de Wagyu", price: 1100, includes: "Láminas de wagyu A5 cocidas en una parrilla de mesa, acompañadas de salsas caseras.", category: "Especialidades", img: "https://i.imgur.com/KDJ4vmf.png" },
+            { id: 31, name: "Matcha Tiramisu", price: 250, includes: "Capas de bizcocho y mascarpone infusionado con matcha, espolvoreado con cacao japonés.", category: "Postres", img: "https://i.imgur.com/cJRM3XV.png" },
+            { id: 32, name: "Mochi de Sésamo Negro", price: 200, includes: "Tradicional mochi relleno de pasta de sésamo negro, servido con una bola de helado de vainilla.", category: "Postres", img: "https://i.imgur.com/dYG06Vn.png" },
+            { id: 33, name: "Helado de Wasabi y Yuzu", price: 180, includes: "Helado artesanal con un toque de wasabi fresco y cítricos yuzu.", category: "Postres", img: "https://i.imgur.com/hTljGud.png" },
+            { id: 34, name: "Crema Catalana de Sake", price: 220, includes: "Versión japonesa de la crema catalana, infusionada con sake y servida con una capa crujiente de azúcar.", category: "Postres", img: "https://i.imgur.com/DSOwAfw.png" },
+            { id: 35, name: "Tarta de Frutas con Gelatina de Sakura", price: 280, includes: "Tarta de frutas frescas con una gelatina de flor de cerezo, servida con crema batida.", category: "Postres", img: "https://i.imgur.com/Jhf3oO6.png" },
+            { id: 36, name: "Cheesecake de Tofu y Miso", price: 260, includes: "Cheesecake ligero de tofu con un toque de miso dulce, servido con coulis de frambuesa.", category: "Postres", img: "https://i.imgur.com/eusN3Bt.png" },
+            { id: 37, name: "Parfait de Matcha y Azuki", price: 300, includes: "Parfait de matcha con capas de helado de azuki, nata montada y crujientes de arroz.", category: "Postres", img: "https://i.imgur.com/wc2orxe.png" },
+            { id: 38, name: "Pudding de Kabocha", price: 240, includes: "Pudding de calabaza japonesa con caramelo de soya y crema de jengibre.", category: "Postres", img: "https://i.imgur.com/aF9yIXx.png" },
+            { id: 39, name: "Soufflé de Yuzu y Chocolate Blanco", price: 320, includes: "Soufflé ligero con notas de yuzu y un centro de chocolate blanco derretido.", category: "Postres", img: "https://i.imgur.com/LBrhsUp.png" },
+            { id: 40, name: "Daifuku de Fresas y Crema", price: 280, includes: "Mochi suave relleno de fresas frescas y crema batida, servido con salsa de frambuesa.", category: "Postres", img: "https://i.imgur.com/fYGAy63.png" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayProducts(products.slice(0, 6), 'horizontal', 'menu-horizontal');
+            displayProducts(products.filter(product => product.category === 'Sopas'), 'vertical', 'menu-vertical-sopas');
+            displayProducts(products.filter(product => product.category === 'Platos Principales'), 'vertical', 'menu-vertical-principales');
+            displayProducts(products.filter(product => product.category === 'Especialidades'), 'vertical', 'menu-vertical-especialidades');
+            displayProducts(products.filter(product => product.category === 'Postres'), 'vertical', 'menu-vertical-postres');
+        });
+    </script>
+
+</body>
+
+</html>
